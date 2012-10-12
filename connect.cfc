@@ -333,7 +333,11 @@
 		<cfset var ut = "" />
 
 		<cfif getCFVersion() GTE 10>
-			<cfset rt =  DateTimeFormat(Now(), arguments.datemask, "UTC") />
+			<cfset ut = Now() />
+			<cfset rt =  DateTimeFormat(ut, arguments.datemask, "UTC") />
+				<cfif LEN(arguments.timemask)>
+					<cfset rt = rt & arguments.separator & DateTimeFormat(ut, arguments.timemask, "UTC") />
+				</cfif>
 		<cfelse>
 			<cfset ut = DateConvert("local2utc",Now()) />
 				<cfset rt = DateFormat(ut, arguments.datemask) />
