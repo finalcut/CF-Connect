@@ -145,7 +145,7 @@
 		</cfscript>
 	</cffunction>
 
-	<cffunction name="getPrimaryEmail" returntype="string" access="public">
+	<cffunction name="getPrimaryEmail" returntype="string" access="public" output="false">
 		<cfreturn TRIM(variables.instance.primaryEmail) />
 	</cffunction>
 	<cffunction name="getSecondaryEmail" returntype="string" access="public" output="false">
