@@ -43,8 +43,11 @@
 
 		<cfset var local = structNew() />
 		<cfset var today = DateConvert("local2utc",Now()) />
+		<cfset local.dateVal = getDateTimeString('yyyymmdd') />
+		<cfset local.timeVal = getDateTimeString("HHmm") />
 
-		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" TransactionDateTime="#DateFormat(today, "yyyy-mm-dd")#T#TimeFormat(today, "HH:mm:ss")#" OriginalIP="#Trim(GetServerIP())#">
+		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" 
+		TransactionDateTime="#local.dateval#T#local.timeval#" OriginalIP="#Trim(GetServerIP())#">
 				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="Web Service" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Update" ReferenceCode="#contact.getReferenceCode()#" FirstName="#contact.getFirstName()#" LastName="#contact.getLastName()#">
 				<Demographics Gender="#contact.getGender()#" Language="#contact.getLanguage()#" />
 				#GetAddressNodes(arguments.contact.getAddresses())#
@@ -71,9 +74,12 @@
 
 		<cfset var local = structNew() />
 		<cfset var today = DateConvert("local2utc",Now()) />
+		<cfset local.dateVal = getDateTimeString('yyyymmdd') />
+		<cfset local.timeVal = getDateTimeString("HHmm") />
 
 
-		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" TransactionDateTime="#DateFormat(today, "yyyy-mm-dd")#T#TimeFormat(today, "HH:mm:ss")#" OriginalIP="#Trim(GetServerIP())#">
+		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" 
+		TransactionDateTime="#local.dateval#T#local.timeval#" OriginalIP="#Trim(GetServerIP())#">
 				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="Web Service" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Delete" ReferenceCode="#contact.getReferenceCode()#">
 				</Contact></Site></ContactRequest></inputXml></UpdateContact>
 		</cfoutput></cfsavecontent>
@@ -195,8 +201,8 @@
 	<cffunction name="getAuthToken" access="private" returntype="string" output="false">
 		<cfset var local = structNew() />
 		<cfset var today = DateConvert("local2utc",Now()) />
-		<cfset local.dateVal = DateFormat(today, "yyyymmdd") />
-		<cfset local.timeVal = TimeFormat(today, "HHmm") />
+		<cfset local.dateVal = getDateTimeString('yyyymmdd') />
+		<cfset local.timeVal = getDateTimeString("HHmm") />
 
 		<cfset local.prestring = "#variables.instance.upperKey#|#variables.instance.secret#|#local.dateVal#|#local.timeVal#" />
 		<cfset local.hashString = LCASE(hash(local.prestring,"md5")) />
@@ -301,7 +307,7 @@
 
 		<cfif variables.instance.uselogging>
 			<cfset d = DateConvert("local2utc",Now()) />
-			<cfset logval = DateFormat(d, 'yyyy-mm-dd') & " " & TimeFormat(d,'HH-mm-ss') & " | " & arguments.entryname & " |" />
+			<cfset logval = getDateTimeString("yyyy-mm-dd HH-mm-ss", "UTC") />
 
 			<cfif isStruct(arguments.logvalue)>
 				<cffile action="append" file="#variables.instance.loggingpath#" output="#logval#" addnewline="true" />
@@ -313,6 +319,30 @@
 				<cffile action="append" file="#variables.instance.loggingpath#" output="#logval#" addnewline="true" />
 			</cfif>
 		</cfif>
+		
+	</cffunction>
+
+
+	<cffunction name="getCFVersion">
+		<cfreturn GetToken(server.coldfusion.productversion, 1) />
+	</cffunction>	
+
+
+	<cffunction name="getDateTimeString">
+		<cfargument name="datemask" type="string" />
+
+		<cfset var rt  = "" />
+
+		<cfif getCFVersion GTE 10>
+			<cfset rt =  DateTImeFormat(Now(), arguments.datemask, "UTC") />
+		<cfelse>
+			<cfset rt = DateConvert("local2utc",Now()) />
+			<cfset rt = DateFormat(rt, arguments.datemask) />
+		</cfif>
+
+
+		<cfreturn rt />
+			
 		
 	</cffunction>
 
