@@ -336,6 +336,7 @@
 			<cfset ut = Now() />
 			<cfset rt =  DateTimeFormat(ut, arguments.datemask, "UTC") />
 				<cfif LEN(arguments.timemask)>
+					<cfset arguments.timemask = replace(arguments.timemask, "mm", "nn") />
 					<cfset rt = rt & arguments.separator & DateTimeFormat(ut, arguments.timemask, "UTC") />
 				</cfif>
 		<cfelse>
