@@ -4,6 +4,8 @@
 		<cfargument name="key" type="string" required="true"  />
 		<cfargument name="webserviceURL" type="string" required="true" />
 		<cfargument name="siteLocalId" type="string" required="true" />
+		<cfargument name="loggingpath" type="string" required="true" />
+		<cfargument name="uselogging" type="string" required="false" default="0" />
 
 			<cfscript>
 				variables.instance = structNew();
@@ -12,6 +14,8 @@
 				variables.instance.webserviceURL = arguments.webserviceURL;
 				variables.instance.upperKey = UCASE(variables.instance.key);
 				variables.instance.siteLocalId = arguments.siteLocalId;
+				variables.instance.loggingpath = arguments.loggingPath;
+				variables.instance.uselogging = arguments.uselogging;
 
 				return this;
 			</cfscript>
@@ -219,6 +223,10 @@
 		<cfargument name="headerString" type="string" required="false" default="" />
 		<cfset var httpResponse = "" />
 
+		<cfset logger("headerString",arguments.headerString) />
+		<cfset logger("soapBody",arguments.soapBody) />
+
+
 		<cfhttp
 			url="#variables.instance.webserviceURL#"
 			method="post"
@@ -236,6 +244,7 @@
 				value="#Trim(arguments.soapBody)#" />
 		</cfhttp>
 
+		<cfset logger("webservice response",httpResponse) />
 		<cfreturn httpResponse />		
 	</cffunction>
 
@@ -279,6 +288,32 @@
 	</cftry>
 	<!---<cfdump var="#local.xml#"><cfabort>--->
 	<cfreturn local.c>
+	</cffunction>
+
+	<cffunction name="logger" access="private">
+		<cfargument name="entryname" type="string">
+		<cfargument name="logvalue" type="any">
+
+		<cfset var keyname = "" />
+		<cfset var d = "" />
+		<cfset var logval = "" />
+
+
+		<cfif variables.instance.uselogging>
+			<cfset d = DateConvert("local2utc",Now()) />
+			<cfset logval = DateFormat(d, 'yyyy-mm-dd') & " " & TimeFormat(d,'HH-mm-ss') & " | " & arguments.entryname & " |" />
+
+			<cfif isStruct(arguments.logvalue)>
+				<cffile action="append" file="#variables.instance.loggingpath#" output="#logval#" addnewline="true" />
+				<cfloop list="#structKeyLIst(arguments.logvalue)#" index="keyname">
+					<cfset logger(keyname, arguments.logvalue[keyname]) />
+				</cfloop>
+			<cfelse>
+				<cfset logval = "#logval# #arguments.logvalue#" />
+				<cffile action="append" file="#variables.instance.loggingpath#" output="#logval#" addnewline="true" />
+			</cfif>
+		</cfif>
+		
 	</cffunction>
 
 </cfcomponent>
