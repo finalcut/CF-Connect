@@ -28,7 +28,7 @@
 
 		<cfset var local = structNew() />
 
-		<cfsavecontent variable="local.body"><cfoutput><GetContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" ReferenceCode="#arguments.referenceCode#" ContactType="#arguments.contactType#" DataProvider="SELF" /></inputXml></GetContact></cfoutput></cfsavecontent>
+		<cfsavecontent variable="local.body"><cfoutput><GetContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" ReferenceCode="#arguments.referenceCode#" ContactType="#arguments.contactType#" DataProvider="CLIENT" /></inputXml></GetContact></cfoutput></cfsavecontent>
 
 		<cfset local.xmlVal = buildXml(local.body) />
 
@@ -47,7 +47,7 @@
 
 		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" 
 		TransactionDateTime="#local.dateval#" OriginalIP="#Trim(GetServerIP())#">
-				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="Web Service" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Update" ReferenceCode="#contact.getReferenceCode()#" FirstName="#contact.getFirstName()#" LastName="#contact.getLastName()#">
+				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="CLIENT" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Update" ReferenceCode="#contact.getReferenceCode()#" FirstName="#contact.getFirstName()#" LastName="#contact.getLastName()#">
 				<Demographics Gender="#contact.getGender()#" Language="#contact.getLanguage()#" />
 				#GetAddressNodes(arguments.contact.getAddresses())#
 				#GetPhoneNodes(arguments.contact.getPhoneNumbers())#
@@ -77,7 +77,7 @@
 
 		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" 
 		TransactionDateTime="#local.dateval#" OriginalIP="#Trim(GetServerIP())#">
-				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="Web Service" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Delete" ReferenceCode="#contact.getReferenceCode()#">
+				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="CLIENT" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Delete" ReferenceCode="#contact.getReferenceCode()#">
 				</Contact></Site></ContactRequest></inputXml></UpdateContact>
 		</cfoutput></cfsavecontent>
 
