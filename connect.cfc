@@ -23,7 +23,7 @@
 
 
 	<cffunction name="getContact" returntype="any"  output="false">
-		<cfargument name="referenceCode" type="string" required="true" hint="munet account name without the domain" />
+		<cfargument name="referenceCode" type="string" required="true" hint="account name without the domain" />
 		<cfargument name="contactType" type="string" default="Student" />
 
 		<cfset var local = structNew() />
@@ -45,7 +45,7 @@
 
 		<cfset local.dateval = getDateTimeString("yyyy-mm-dd", "HH:mm:ss", "T") />
 
-		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" 
+		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#"
 		TransactionDateTime="#local.dateval#" OriginalIP="#Trim(GetServerIP())#">
 				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="CLIENT" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Update" ReferenceCode="#contact.getReferenceCode()#" FirstName="#contact.getFirstName()#" LastName="#contact.getLastName()#">
 				<Demographics Gender="#contact.getGender()#" Language="#contact.getLanguage()#" />
@@ -67,7 +67,7 @@
 	</cffunction>
 
 	<cffunction name="deleteContact" returntype="any"  output="false">
-		<cfargument name="referenceCode" type="string" required="true" hint="munet account name without the domain" />
+		<cfargument name="referenceCode" type="string" required="true" hint="account name without the domain" />
 		<cfargument name="contactType" type="string" default="Student" />
 		<cfargument name="contact" type="contact" required="true" />
 
@@ -75,7 +75,7 @@
 		<cfset local.dateval = getDateTimeString("yyyy-mm-dd", "HH:mm:ss", "T") />
 
 
-		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#" 
+		<cfsavecontent variable="local.body"><cfoutput><UpdateContact xmlns="BBConnect.Service.Contact"><inputXml><ContactRequest xmlns="" Version="2.0" TransactionID="#Replace(createUUID(),'-','','All')#"
 		TransactionDateTime="#local.dateval#" OriginalIP="#Trim(GetServerIP())#">
 				<Site LocalID="#variables.instance.siteLocalID#"><Contact DataProvider="CLIENT" Type="#contact.getContactType()#" AcceptedTermsOfUse="Yes" Action="Delete" ReferenceCode="#contact.getReferenceCode()#">
 				</Contact></Site></ContactRequest></inputXml></UpdateContact>
@@ -182,7 +182,7 @@
 		<cfscript>
 		   var iaclass="";
 		   var addr="";
-		      
+
 		   // Init class
 		   iaclass=CreateObject("java", "java.net.InetAddress");
 
@@ -248,7 +248,7 @@
 		</cfhttp>
 
 		<cfset logger("webservice response",httpResponse) />
-		<cfreturn httpResponse />		
+		<cfreturn httpResponse />
 	</cffunction>
 
 	<cffunction name="xmlToContact" access="private" returntype="any">
@@ -315,13 +315,13 @@
 				<cffile action="append" file="#variables.instance.loggingpath#" output="#logval#" addnewline="true" />
 			</cfif>
 		</cfif>
-		
+
 	</cffunction>
 
 
 	<cffunction name="getCFVersion">
 		<cfreturn GetToken(server.coldfusion.productversion, 1,',') />
-	</cffunction>	
+	</cffunction>
 
 
 	<cffunction name="getDateTimeString">
@@ -349,8 +349,8 @@
 
 
 		<cfreturn rt />
-			
-		
+
+
 	</cffunction>
 
 
